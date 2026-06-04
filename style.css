@@ -1,4 +1,4 @@
-/* Saint Series SS - Just Map */
+/* Saint Series SS - Map with Toggle */
 
 @font-face {
     font-family: 'Sabon';
@@ -27,11 +27,59 @@ body {
     background: var(--bg-dark);
     background-image: var(--gradient-bloom);
     background-attachment: fixed;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 #map {
     width: 100vw;
     height: 100vh;
     border: none;
+    transition: height 0.3s;
+}
+
+#map.collapsed {
+    height: 40vh;
+}
+
+.map-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    padding: 12px 24px;
+    background: var(--accent-primary);
+    color: white;
+    border: none;
+    font-family: 'Sabon', serif;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 0;
+    transition: all 0.3s;
+}
+
+.map-toggle:hover {
+    background: var(--accent-secondary);
+}
+
+.hidden-content {
+    display: none;
+    padding: 40px;
+    min-height: 100vh;
+}
+
+body.map-collapsed .hidden-content {
+    display: block;
+}
+
+.hidden-content h1 {
+    font-family: 'Sabon', serif;
+    font-size: 2.5rem;
+    color: var(--accent-secondary);
+    margin-bottom: 20px;
+}
+
+.hidden-content p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
 }
