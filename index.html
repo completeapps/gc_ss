@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saint Series SS | Admin Panel</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
     <div class="admin-layout">
@@ -33,6 +34,10 @@
                     <span class="nav-icon">🗺️</span>
                     <span class="nav-text">Map</span>
                 </a>
+                <a href="#" class="nav-item" data-section="add">
+                    <span class="nav-icon">➕</span>
+                    <span class="nav-text">Add Cache</span>
+                </a>
             </nav>
             
             <div class="sidebar-footer">
@@ -46,35 +51,101 @@
             <header class="content-header">
                 <div class="header-left">
                     <h2>All Saint Series Caches</h2>
-                    <p class="breadcrumb">~200 Caches | Bettendorf, Iowa</p>
+                    <p class="breadcrumb"><span id="cache-count">0</span> Caches | Bettendorf, Iowa</p>
                 </div>
                 <div class="header-right">
-                    <button class="btn btn-primary" onclick="refreshCaches()">🔄 Refresh from Geocaching</button>
+                    <button class="btn btn-primary" onclick="exportData()">💾 Export Data</button>
+                    <button class="btn btn-outline-sm" onclick="importData()">📂 Import Data</button>
                 </div>
             </header>
 
-            <!-- Main Grid: All Caches -->
+            <!-- All Caches Grid -->
             <section class="content-section active" id="section-caches">
                 <div class="cache-grid" id="cache-grid">
-                    <!-- Cache cards will be loaded here from geocaching.com API -->
+                    <div class="empty-state">
+                        <h3>No caches added yet</h3>
+                        <p>Click "Add Cache" in the sidebar to add your first Saint Series cache!</p>
+                    </div>
                 </div>
             </section>
 
-            <!-- Recent Logs Section -->
+            <!-- Recent Logs -->
             <section class="content-section" id="section-logs">
                 <h2 style="margin-bottom: 25px; font-family: 'Sabon', serif; font-size: 1.8rem;">Recent Activity Logs</h2>
                 <div class="logs-container" id="logs-container">
-                    <!-- Latest logs from each cache -->
+                    <div class="empty-state">
+                        <h3>No logs yet</h3>
+                        <p>Add logs when you place or update caches!</p>
+                    </div>
                 </div>
             </section>
 
-            <!-- Map Section -->
+            <!-- Map -->
             <section class="content-section" id="section-map">
                 <div class="map-header">
                     <h2 style="margin-bottom: 20px; font-family: 'Sabon', serif; font-size: 1.8rem;">Saint Series Map</h2>
                     <button class="btn btn-outline-sm" onclick="centerMap()">Center on Bettendorf</button>
                 </div>
                 <div id="map"></div>
+            </section>
+
+            <!-- Add Cache Form -->
+            <section class="content-section" id="section-add">
+                <div class="form-container">
+                    <h2 style="margin-bottom: 25px; font-family: 'Sabon', serif; font-size: 1.8rem;">Add New Saint Series Cache</h2>
+                    <form id="add-cache-form" class="add-cache-form">
+                        <div class="form-group">
+                            <label>Cache Name *</label>
+                            <input type="text" id="cache-name" required placeholder="e.g., Saint John's Park Cache">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>GC Code (from geocaching.com) *</label>
+                            <input type="text" id="cache-gc" required placeholder="e.g., GC1A2B3">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Cache Type *</label>
+                            <select id="cache-type" required>
+                                <option value="Traditional">Traditional</option>
+                                <option value="Multi-cache">Multi-cache</option>
+                                <option value="Puzzle">Puzzle</option>
+                                <option value="Virtual">Virtual</option>
+                                <option value="Wherigo">Wherigo</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Status *</label>
+                            <select id="cache-status" required>
+                                <option value="enabled">Enabled</option>
+                                <option value="disabled">Disabled</option>
+                                <option value="archived">Archived</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Latitude *</label>
+                                <input type="number" step="0.00001" id="cache-lat" required placeholder="41.5247" min="0" max="90">
+                            </div>
+                            <div class="form-group">
+                                <label>Longitude *</label>
+                                <input type="number" step="0.00001" id="cache-lon" required placeholder="-90.5681" min="-180" max="180">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Notes</label>
+                            <textarea id="cache-notes" rows="3" placeholder="Any notes about this cache..."></textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="resetForm()">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Add Cache</button>
+                        </div>
+                    </form>
+                </div>
             </section>
         </main>
     </div>
