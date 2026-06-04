@@ -11,6 +11,7 @@
     --bg-dark: #0a0a0f;
     --accent-primary: #ff0055;
     --accent-secondary: #00ddff;
+    --text-secondary: #888899;
     
     --gradient-bloom: radial-gradient(circle at 80% 20%, rgba(255, 0, 85, 0.08) 0%, transparent 40%),
                       radial-gradient(circle at 20% 80%, rgba(0, 221, 255, 0.06) 0%, transparent 40%);
@@ -34,7 +35,7 @@ body {
     width: 100vw;
     height: 100vh;
     border: none;
-    transition: height 0.3s;
+    transition: height 0.3s ease;
 }
 
 #map.collapsed {
@@ -54,7 +55,6 @@ body {
     font-weight: bold;
     font-size: 1rem;
     cursor: pointer;
-    border-radius: 0;
     transition: all 0.3s;
 }
 
@@ -63,23 +63,6 @@ body {
 }
 
 .hidden-content {
-    display: none;
     padding: 40px;
-    min-height: 100vh;
-}
-
-body.map-collapsed .hidden-content {
-    display: block;
-}
-
-.hidden-content h1 {
-    font-family: 'Sabon', serif;
-    font-size: 2.5rem;
-    color: var(--accent-secondary);
-    margin-bottom: 20px;
-}
-
-.hidden-content p {
-    color: var(--text-secondary);
-    font-size: 1.1rem;
+    min-height: 60vh;
 }
