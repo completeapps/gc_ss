@@ -3,57 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adam's Geocaching Adventures</title>
+    <title>Saint Series SS | Geocache Series Dashboard</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
-    <header>
-        <h1>🗺️ Adam's Geocaching Adventures</h1>
-        <p>Exploring caches across national parks and beyond</p>
-    </header>
-    
-    <main>
-        <section id="about">
-            <h2>About This Site</h2>
-            <p>Welcome to my geocaching journal! Here I track my cache finds, share tips, and document my outdoor adventures.</p>
-        </section>
-        
-        <section id="latest-caches">
-            <h2>Latest Caches Found</h2>
-            <div id="cache-list">
-                <div class="cache-card">
-                    <h3>GC Example Cache</h3>
-                    <p><strong>Type:</strong> Traditional Cache</p>
-                    <p><strong>Location:</strong> Bettendorf, Iowa</p>
-                    <p><strong>Found:</strong> June 2026</p>
-                    <p><strong>Difficulty:</strong> ⭐⭐⭐☆☆</p>
-                </div>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1>🗺️ Saint Series SS</h1>
+                <p class="subtitle">Geocache Series Dashboard | Bettendorf, Iowa</p>
+                <div class="status-badge">In Development</div>
             </div>
-        </section>
-        
-        <section id="stats">
-            <h2>My Stats</h2>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h3>Total Finds</h3>
-                    <p class="stat-number">150+</p>
+        </header>
+
+        <main class="main">
+            <!-- Overview Dashboard -->
+            <section class="card dashboard-overview">
+                <h2>Series Overview</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📍</div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="total-caches">0</span>
+                            <span class="stat-label">Caches Planned</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="placed-caches">0</span>
+                            <span class="stat-label">Placed</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🔍</div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="active-caches">0</span>
+                            <span class="stat-label">Active</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="completion">0%</span>
+                            <span class="stat-label">Completion</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <h3>Countries</h3>
-                    <p class="stat-number">1</p>
+            </section>
+
+            <!-- Interactive Map -->
+            <section class="card map-section">
+                <h2>Cache Locations Map</h2>
+                <div id="map"></div>
+                <div class="map-controls">
+                    <button class="btn btn-primary" onclick="centerMap()">Center on Bettendorf</button>
+                    <button class="btn btn-secondary" onclick="addTestCache()">Add Test Cache</button>
                 </div>
-                <div class="stat-card">
-                    <h3>Favorite Type</h3>
-                    <p>Puzzle Caches</p>
+            </section>
+
+            <!-- Cache List -->
+            <section class="card cache-list-section">
+                <h2>Cache Inventory</h2>
+                <div class="filter-bar">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="planned">Planned</button>
+                    <button class="filter-btn" data-filter="placed">Placed</button>
+                    <button class="filter-btn" data-filter="active">Active</button>
                 </div>
-            </div>
-        </section>
-    </main>
-    
-    <footer>
-        <p>Hosted on GitHub Pages | Built with HTML & CSS</p>
-    </footer>
-    
+                <div id="cache-list" class="cache-list">
+                    <!-- Cache cards will be inserted here by JavaScript -->
+                    <div class="empty-state">
+                        <p>No caches added yet. Click "Add Test Cache" to start building your Saint Series!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tools Section (Future-Ready) -->
+            <section class="card tools-section">
+                <h2>Tools & Features</h2>
+                <div class="tools-grid">
+                    <div class="tool-card" data-tool="coordinates">
+                        <div class="tool-icon">📐</div>
+                        <h3>Coordinate Calculator</h3>
+                        <p>Calculate and convert GPS coordinates</p>
+                        <button class="btn btn-outline" onclick="alert('Coordinate calculator coming soon!')">Launch</button>
+                    </div>
+                    <div class="tool-card" data-tool="gpx">
+                        <div class="tool-icon">📁</div>
+                        <h3>GPX Viewer</h3>
+                        <p>Upload and view GPX files</p>
+                        <button class="btn btn-outline" onclick="alert('GPX viewer coming soon!')">Launch</button>
+                    </div>
+                    <div class="tool-card" data-tool="puzzle">
+                        <div class="tool-icon">🧩</div>
+                        <h3>Puzzle Solver</h3>
+                        <p>Tools for puzzle cache solving</p>
+                        <button class="btn btn-outline" onclick="alert('Puzzle solver coming soon!')">Launch</button>
+                    </div>
+                    <div class="tool-card" data-tool="notes">
+                        <div class="tool-icon">📝</div>
+                        <h3>Notes & Planning</h3>
+                        <p>Track cache ideas and puzzles</p>
+                        <button class="btn btn-outline" onclick="alert('Notes tool coming soon!')">Launch</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Actions -->
+            <section class="card actions-section">
+                <h2>Quick Actions</h2>
+                <div class="actions-grid">
+                    <button class="action-btn" onclick="addNewCache()">
+                        <span class="action-icon">➕</span>
+                        <span>Add New Cache</span>
+                    </button>
+                    <button class="action-btn" onclick="exportData()">
+                        <span class="action-icon">📤</span>
+                        <span>Export GPX</span>
+                    </button>
+                    <button class="action-btn" onclick="importData()">
+                        <span class="action-icon">📥</span>
+                        <span>Import GPX</span>
+                    </button>
+                    <button class="action-btn" onclick="resetAll()">
+                        <span class="action-icon">🔄</span>
+                        <span>Reset Dashboard</span>
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>Saint Series SS Dashboard | Built for Geocaching Excellence</p>
+            <p>completeapps.github.io/gc_ss</p>
+        </footer>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
