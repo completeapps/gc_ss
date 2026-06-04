@@ -4,43 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saint Series SS | Admin Panel</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer>
 </head>
 <body>
     <div class="admin-layout">
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-toggle" id="sidebarToggle">
+                <span class="toggle-icon">◀</span>
+            </div>
+            
             <div class="sidebar-header">
-                <h1>🗺️ Saint Series</h1>
+                <h1>Saint Series</h1>
                 <p class="sidebar-subtitle">Admin Panel</p>
             </div>
             
             <nav class="sidebar-nav">
-                <a href="#" class="nav-item active" data-section="dashboard">
-                    <span class="nav-icon">📊</span>
-                    <span>Dashboard</span>
-                </a>
-                <a href="#" class="nav-item" data-section="caches">
+                <a href="#" class="nav-item active" data-section="caches">
                     <span class="nav-icon">📍</span>
-                    <span>All Caches</span>
+                    <span class="nav-text">All Caches</span>
                 </a>
                 <a href="#" class="nav-item" data-section="logs">
                     <span class="nav-icon">📝</span>
-                    <span>Recent Logs</span>
+                    <span class="nav-text">Recent Logs</span>
                 </a>
                 <a href="#" class="nav-item" data-section="map">
                     <span class="nav-icon">🗺️</span>
-                    <span>Map View</span>
-                </a>
-                <a href="#" class="nav-item" data-section="coordinates">
-                    <span class="nav-icon">📐</span>
-                    <span>Coordinates</span>
-                </a>
-                <a href="#" class="nav-item" data-section="settings">
-                    <span class="nav-icon">⚙️</span>
-                    <span>Settings</span>
+                    <span class="nav-text">Map</span>
                 </a>
             </nav>
             
@@ -54,309 +45,38 @@
             <!-- Header -->
             <header class="content-header">
                 <div class="header-left">
-                    <h2>Dashboard Overview</h2>
-                    <p class="breadcrumb">Saint Series SS | Bettendorf, Iowa</p>
+                    <h2>All Saint Series Caches</h2>
+                    <p class="breadcrumb">~200 Caches | Bettendorf, Iowa</p>
                 </div>
                 <div class="header-right">
-                    <span class="status-indicator online"></span>
-                    <span class="status-text">System Active</span>
-                    <button class="btn btn-primary" onclick="addNewCache()">+ Add Cache</button>
+                    <button class="btn btn-primary" onclick="refreshCaches()">🔄 Refresh from Geocaching</button>
                 </div>
             </header>
 
-            <!-- Dashboard Section -->
-            <section class="content-section active" id="section-dashboard">
-                <!-- Stats Grid -->
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">📍</div>
-                        <div class="stat-info">
-                            <span class="stat-number" id="total-caches">0</span>
-                            <span class="stat-label">Total Caches</span>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">🔵</div>
-                        <div class="stat-info">
-                            <span class="stat-number" id="planned-caches">0</span>
-                            <span class="stat-label">Planned</span>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">🟢</div>
-                        <div class="stat-info">
-                            <span class="stat-number" id="active-caches">0</span>
-                            <span class="stat-label">Active</span>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">🔍</div>
-                        <div class="stat-info">
-                            <span class="stat-number" id="total-finds">0</span>
-                            <span class="stat-label">Total Finds</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Recent Logs -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>📝 Recent Activity Logs</h3>
-                        <button class="btn btn-outline-sm" onclick="clearLogs()">Clear Logs</button>
-                    </div>
-                    <div class="log-container">
-                        <div id="logs-list" class="logs-list">
-                            <div class="log-entry empty">
-                                <span class="log-time">--:--</span>
-                                <span class="log-message">No activity yet. Add your first Saint Series cache to start logging.</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quick Stats Table -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>📊 Cache Summary</h3>
-                    </div>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Cache Name</th>
-                                <th>Type</th>
-                                <th>Status</th>
-                                <th>Coordinates</th>
-                                <th>Last Updated</th>
-                            </tr>
-                        </thead>
-                        <tbody id="summary-table">
-                            <tr class="empty-row">
-                                <td colspan="5">No caches added yet</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- All Caches Section -->
-            <section class="content-section" id="section-caches">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>📍 All Saint Series Caches</h3>
-                        <button class="btn btn-primary" onclick="addNewCache()">+ Add New Cache</button>
-                    </div>
-                    <div class="filter-bar">
-                        <input type="text" id="search-caches" placeholder="Search caches..." class="search-input">
-                        <select id="filter-status" class="filter-select">
-                            <option value="all">All Status</option>
-                            <option value="planned">Planned</option>
-                            <option value="placed">Placed</option>
-                            <option value="active">Active</option>
-                            <option value="archived">Archived</option>
-                        </select>
-                        <select id="filter-type" class="filter-select">
-                            <option value="all">All Types</option>
-                            <option value="Traditional">Traditional</option>
-                            <option value="Multi-cache">Multi-cache</option>
-                            <option value="Puzzle">Puzzle</option>
-                            <option value="Virtual">Virtual</option>
-                            <option value="Wherigo">Wherigo</option>
-                        </select>
-                    </div>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>GC Code</th>
-                                <th>Type</th>
-                                <th>Status</th>
-                                <th>Coordinates</th>
-                                <th>Difficulty</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="caches-table">
-                            <tr class="empty-row">
-                                <td colspan="7">No caches added yet. Click "+ Add New Cache" to start building your Saint Series!</td>
-                            </tbody>
-                    </table>
+            <!-- Main Grid: All Caches -->
+            <section class="content-section active" id="section-caches">
+                <div class="cache-grid" id="cache-grid">
+                    <!-- Cache cards will be loaded here from geocaching.com API -->
                 </div>
             </section>
 
             <!-- Recent Logs Section -->
             <section class="content-section" id="section-logs">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>📝 Complete Activity Log</h3>
-                        <div class="log-actions">
-                            <button class="btn btn-outline-sm" onclick="exportLogs()">Export Logs</button>
-                            <button class="btn btn-outline-sm" onclick="clearLogs()">Clear All</button>
-                        </div>
-                    </div>
-                    <div class="log-container large">
-                        <div id="full-logs-list" class="logs-list"></div>
-                    </div>
+                <h2 style="margin-bottom: 25px; font-family: 'Sabon', serif; font-size: 1.8rem;">Recent Activity Logs</h2>
+                <div class="logs-container" id="logs-container">
+                    <!-- Latest logs from each cache -->
                 </div>
             </section>
 
-            <!-- Map View Section -->
+            <!-- Map Section -->
             <section class="content-section" id="section-map">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>🗺️ Saint Series Map</h3>
-                        <div class="map-actions">
-                            <button class="btn btn-outline-sm" onclick="centerMap()">Center on Bettendorf</button>
-                            <button class="btn btn-outline-sm" onclick="zoomToCaches()">Zoom to All Caches</button>
-                        </div>
-                    </div>
-                    <div id="map"></div>
-                    <div class="map-legend">
-                        <div class="legend-item">
-                            <span class="legend-dot planned"></span>
-                            <span>Planned</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-dot placed"></span>
-                            <span>Placed</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-dot active"></span>
-                            <span>Active</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-dot archived"></span>
-                            <span>Archived</span>
-                        </div>
-                    </div>
+                <div class="map-header">
+                    <h2 style="margin-bottom: 20px; font-family: 'Sabon', serif; font-size: 1.8rem;">Saint Series Map</h2>
+                    <button class="btn btn-outline-sm" onclick="centerMap()">Center on Bettendorf</button>
                 </div>
-            </section>
-
-            <!-- Coordinates Section -->
-            <section class="content-section" id="section-coordinates">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>📐 All Coordinates</h3>
-                        <button class="btn btn-outline-sm" onclick="copyAllCoords()">Copy All to Clipboard</button>
-                    </div>
-                    <div class="coords-table-container">
-                        <table class="coords-table">
-                            <thead>
-                                <tr>
-                                    <th>Cache Name</th>
-                                    <th>Latitude</th>
-                                    <th>Longitude</th>
-                                    <th>DMS Format</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="coords-table">
-                                <tr class="empty-row">
-                                    <td colspan="5">No coordinates yet</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Settings Section -->
-            <section class="content-section" id="section-settings">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>⚙️ Dashboard Settings</h3>
-                    </div>
-                    <div class="settings-grid">
-                        <div class="setting-item">
-                            <label>Series Name</label>
-                            <input type="text" value="Saint Series SS" class="setting-input">
-                        </div>
-                        <div class="setting-item">
-                            <label>Location</label>
-                            <input type="text" value="Bettendorf, Iowa" class="setting-input">
-                        </div>
-                        <div class="setting-item">
-                            <label>Default Cache Type</label>
-                            <select class="setting-select">
-                                <option>Traditional</option>
-                                <option>Multi-cache</option>
-                                <option>Puzzle</option>
-                                <option>Virtual</option>
-                                <option>Wherigo</option>
-                            </select>
-                        </div>
-                        <div class="setting-item">
-                            <label>Data Storage</label>
-                            <div class="setting-actions">
-                                <button class="btn btn-outline-sm" onclick="exportAllData()">Export All Data</button>
-                                <button class="btn btn-outline-sm" onclick="importData()">Import Data</button>
-                                <button class="btn btn-danger btn-outline-sm" onclick="resetAllData()">Reset All</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div id="map"></div>
             </section>
         </main>
-    </div>
-
-    <!-- Add Cache Modal -->
-    <div id="add-cache-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Add New Saint Series Cache</h3>
-                <button class="modal-close" onclick="closeModal()">&times;</button>
-            </div>
-            <form id="add-cache-form" class="modal-form">
-                <div class="form-group">
-                    <label>Cache Name *</label>
-                    <input type="text" id="cache-name" required placeholder="e.g., Saint John's Park Cache">
-                </div>
-                <div class="form-group">
-                    <label>GC Code (optional)</label>
-                    <input type="text" id="cache-gc" placeholder="e.g., GC1A2B3">
-                </div>
-                <div class="form-group">
-                    <label>Cache Type *</label>
-                    <select id="cache-type" required>
-                        <option value="Traditional">Traditional</option>
-                        <option value="Multi-cache">Multi-cache</option>
-                        <option value="Puzzle">Puzzle</option>
-                        <option value="Virtual">Virtual</option>
-                        <option value="Wherigo">Wherigo</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Status *</label>
-                    <select id="cache-status" required>
-                        <option value="planned">Planned</option>
-                        <option value="placed">Placed</option>
-                        <option value="active">Active</option>
-                        <option value="archived">Archived</option>
-                    </select>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Latitude *</label>
-                        <input type="number" step="0.00001" id="cache-lat" required placeholder="41.5247" min="0" max="90">
-                    </div>
-                    <div class="form-group">
-                        <label>Longitude *</label>
-                        <input type="number" step="0.00001" id="cache-lon" required placeholder="-90.5681" min="-180" max="180">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Difficulty (1-5)</label>
-                    <input type="number" id="cache-difficulty" min="1" max="5" value="3" placeholder="3">
-                </div>
-                <div class="form-group">
-                    <label>Notes</label>
-                    <textarea id="cache-notes" rows="3" placeholder="Additional notes about this cache..."></textarea>
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Add Cache</button>
-                </div>
-            </form>
-        </div>
     </div>
 
     <script src="script.js"></script>
