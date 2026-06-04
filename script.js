@@ -10,24 +10,25 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19
 }).addTo(map);
 
-// Toggle button
-const toggleBtn = document.getElementById('mapToggle');
-
-toggleBtn.addEventListener('click', function() {
-    mapCollapsed = !mapCollapsed;
+// Wait for DOM to load
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = document.getElementById('mapToggle');
     
-    if (mapCollapsed) {
-        document.getElementById('map').classList.add('collapsed');
-        this.textContent = '▲ Expand Map';
-        document.body.classList.add('map-collapsed');
-    } else {
-        document.getElementById('map').classList.remove('collapsed');
-        this.textContent = '▼ Collapse Map';
-        document.body.classList.remove('map-collapsed');
-    }
-    
-    // Trigger map resize after animation
-    setTimeout(() => {
-        map.invalidateSize();
-    }, 300);
+    toggleBtn.addEventListener('click', function() {
+        mapCollapsed = !mapCollapsed;
+        const mapEl = document.getElementById('map');
+        
+        if (mapCollapsed) {
+            mapEl.style.height = '40vh';
+            this.textContent = '▲ Expand Map';
+        } else {
+            mapEl.style.height = '100vh';
+            this.textContent = '▼ Collapse Map';
+        }
+        
+        // Trigger map resize after animation
+        setTimeout(() => {
+            map.invalidateSize();
+        }, 300);
+    });
 });
