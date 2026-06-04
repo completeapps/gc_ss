@@ -11,9 +11,73 @@
 <body>
     <button id="mapToggle" class="map-toggle">▼ Collapse Map</button>
     <div id="map"></div>
+    
     <div id="content" class="hidden-content">
-        <h1>Saint Series SS</h1>
-        <p>Admin Panel Content</p>
+        <div class="content-header">
+            <div>
+                <h1>Saint Series SS</h1>
+                <p class="subtitle">Admin Panel | <span id="cache-count">0</span> Caches</p>
+            </div>
+            <button class="btn btn-primary" onclick="showAddForm()">+ Add Cache</button>
+        </div>
+
+        <!-- Add Cache Form (hidden by default) -->
+        <div id="add-form" class="form-section hidden">
+            <h2>Add New Cache</h2>
+            <form id="cache-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Cache Name *</label>
+                        <input type="text" id="cache-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>GC Code *</label>
+                        <input type="text" id="cache-gc" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Type *</label>
+                        <select id="cache-type" required>
+                            <option value="Traditional">Traditional</option>
+                            <option value="Multi-cache">Multi-cache</option>
+                            <option value="Puzzle">Puzzle</option>
+                            <option value="Virtual">Virtual</option>
+                            <option value="Wherigo">Wherigo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Status *</label>
+                        <select id="cache-status" required>
+                            <option value="enabled">Enabled</option>
+                            <option value="disabled">Disabled</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Latitude *</label>
+                        <input type="number" step="0.00001" id="cache-lat" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Longitude *</label>
+                        <input type="number" step="0.00001" id="cache-lon" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="cache-notes" rows="2"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="hideAddForm()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Cache</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Cache Grid -->
+        <div id="cache-grid" class="cache-grid"></div>
     </div>
     
     <script src="script.js"></script>
