@@ -53,20 +53,23 @@ body {
     background: var(--bg-panel);
     border-right: 1px solid var(--border-color);
     position: fixed;
+    left: 0;
+    top: 0;
     width: 240px;
     height: 100vh;
     z-index: 100;
     transition: width 0.3s;
+    overflow-x: hidden;
 }
 
 .sidebar.collapsed {
-    width: 60px;
+    width: 70px;
 }
 
 .sidebar-toggle {
     position: absolute;
     top: 15px;
-    right: 10px;
+    right: -15px;
     width: 30px;
     height: 30px;
     background: var(--accent-primary);
@@ -94,11 +97,13 @@ body {
     font-size: 1.6rem;
     font-weight: bold;
     margin-bottom: 5px;
+    white-space: nowrap;
 }
 
 .sidebar-subtitle {
     font-size: 0.85rem;
     color: var(--text-secondary);
+    white-space: nowrap;
 }
 
 .sidebar-nav {
@@ -114,6 +119,7 @@ body {
     text-decoration: none;
     transition: all 0.2s;
     border-left: 3px solid transparent;
+    white-space: nowrap;
 }
 
 .nav-item:hover {
@@ -129,7 +135,7 @@ body {
 
 .nav-icon {
     font-size: 1.3rem;
-    width: 24px;
+    min-width: 24px;
 }
 
 .nav-text {
@@ -141,10 +147,15 @@ body {
 }
 
 .sidebar-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
     padding: 20px;
     border-top: 1px solid var(--border-color);
     font-size: 0.8rem;
     color: var(--text-muted);
+    white-space: nowrap;
 }
 
 .sidebar.collapsed .sidebar-header h1,
@@ -153,14 +164,16 @@ body {
     display: none;
 }
 
-/* Main Content */
+/* Main Content - FIXED: accounts for sidebar width */
 .main-content {
     margin-left: 240px;
     min-height: 100vh;
+    width: calc(100% - 240px);
 }
 
 .sidebar.collapsed ~ .main-content {
-    margin-left: 60px;
+    margin-left: 70px;
+    width: calc(100% - 70px);
 }
 
 /* Header */
@@ -195,6 +208,7 @@ body {
     font-family: 'Sabon', serif;
     font-weight: bold;
     border-radius: 0;
+    transition: background 0.2s;
 }
 
 .btn:hover {
@@ -205,6 +219,16 @@ body {
     background: var(--accent-primary);
 }
 
+.btn-secondary {
+    background: var(--bg-panel);
+    border: 2px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+    border-color: var(--accent-secondary);
+}
+
 .btn-outline-sm {
     padding: 8px 16px;
     background: transparent;
@@ -212,6 +236,9 @@ body {
     color: var(--accent-secondary);
     font-size: 0.9rem;
     border-radius: 0;
+    cursor: pointer;
+    font-family: 'Sabon', serif;
+    transition: all 0.2s;
 }
 
 .btn-outline-sm:hover {
@@ -252,7 +279,7 @@ body {
 .cache-header {
     display: flex;
     justify-content: space-between;
-    align-items: start;
+    align-items: flex-start;
     margin-bottom: 15px;
 }
 
@@ -287,6 +314,11 @@ body {
     color: var(--text-primary);
 }
 
+.cache-status.archived {
+    background: var(--accent-warning);
+    color: var(--bg-dark);
+}
+
 .cache-info {
     margin: 15px 0;
 }
@@ -319,6 +351,29 @@ body {
 
 .last-logged {
     color: var(--accent-warning);
+}
+
+.cache-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+    grid-column: 1 / -1;
+}
+
+.empty-state h3 {
+    font-family: 'Sabon', serif;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: var(--text-secondary);
 }
 
 /* Logs Container */
@@ -370,28 +425,6 @@ body {
     border: 2px solid var(--accent-primary);
     border-radius: 0;
 }
-/* Cache Actions */
-.cache-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid var(--border-color);
-}
-
-/* Empty State */
-.empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--text-muted);
-}
-
-.empty-state h3 {
-    font-family: 'Sabon', serif;
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-    color: var(--text-secondary);
-}
 
 /* Form Container */
 .form-container {
@@ -417,6 +450,18 @@ body {
     margin-top: 30px;
 }
 
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-family: 'Sabon', serif;
+    font-weight: bold;
+    color: var(--accent-secondary);
+}
+
 .form-group input,
 .form-group select,
 .form-group textarea {
@@ -435,9 +480,4 @@ body {
 .form-group textarea:focus {
     outline: none;
     border-color: var(--accent-secondary);
-}
-
-.btn-secondary {
-    background: var(--bg-panel);
-    border: 2px solid var(--border-color);
 }
